@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 
 # Page configuration
 st.set_page_config(
@@ -9,28 +10,50 @@ st.set_page_config(
 
 # Title
 st.title("👁️ DR-AI")
-st.subheader("AI-Powered Eye Screening ")
+st.subheader("AI-Powered Eye Screening")
 
 st.write(
-    "Upload an eye image to perform preliminary diabetic retinopathy screening."
+    "Upload a retinal image for preliminary AI-based screening."
 )
 
-# Image upload
+# Upload image
 uploaded_file = st.file_uploader(
-    "Upload an eye image",
+    "Upload a retinal image",
     type=["jpg", "jpeg", "png"]
 )
 
-# Show uploaded image
 if uploaded_file is not None:
+
+    # Open image
+    image = Image.open(uploaded_file)
+
+    # Display image
     st.image(
-        uploaded_file,
-        caption="Uploaded Eye Image",
+        image,
+        caption="Uploaded Retinal Image",
         use_container_width=True
     )
 
     st.success("Image uploaded successfully!")
 
-    # Temporary result
-    st.subheader("Screening Result")
-    st.info("AI analysis will be connected here.")
+    # Image information
+    width, height = image.size
+
+    st.write("### Image Information")
+    st.write(f"Width: {width} pixels")
+    st.write(f"Height: {height} pixels")
+
+    # Basic quality check
+    if width < 300 or height < 300:
+        st.warning(
+            "⚠️ Image quality may be insufficient. "
+            "Please upload a higher-resolution retinal image."
+        )
+    else:
+        st.success("✅ Image quality check passed.")
+
+        st.subheader("Screening")
+
+        st.info(
+            "AI analysis will be connected here."
+        )
