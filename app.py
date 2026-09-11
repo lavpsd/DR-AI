@@ -52,8 +52,32 @@ if uploaded_file is not None:
     else:
         st.success("✅ Image quality check passed.")
 
-        st.subheader("Screening")
+       st.subheader("Screening")
+
+if st.button("🔍 Analyze Image"):
+
+    st.write("Analyzing image...")
+
+    st.success("Analysis completed.")
+
+    st.subheader("Screening Result")
+
+    st.info(
+        "AI model will be connected here."
+    )
+else:
+    st.success("✅ Image quality check passed.")
+
+    st.subheader("Screening")
+
+    if st.button("🔍 Analyze Image"):
+
+        st.write("Analyzing image...")
+
+        st.success("Analysis completed.")
+
+        st.subheader("Screening Result")
 
         st.info(
-            "AI analysis will be connected here."
+            "AI model will be connected here."
         )
