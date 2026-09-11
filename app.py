@@ -9,7 +9,7 @@ st.set_page_config(
 
 # Title
 st.title("👁️ DR-AI")
-st.subheader("AI-Powered Eye Screening Prototype")
+st.subheader("AI-Powered Eye Screening ")
 
 st.write(
     "Upload an eye image to perform preliminary diabetic retinopathy screening."
