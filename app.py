@@ -45,39 +45,27 @@ if uploaded_file is not None:
 
     # Basic quality check
     if width < 300 or height < 300:
+
         st.warning(
             "⚠️ Image quality may be insufficient. "
             "Please upload a higher-resolution retinal image."
         )
+
     else:
+
         st.success("✅ Image quality check passed.")
 
-       st.subheader("Screening")
+        # Screening
+        st.subheader("Screening")
 
-if st.button("🔍 Analyze Image"):
+        if st.button("🔍 Analyze Image"):
 
-    st.write("Analyzing image...")
+            st.write("Analyzing image...")
 
-    st.success("Analysis completed.")
+            st.success("Analysis completed.")
 
-    st.subheader("Screening Result")
+            st.subheader("Screening Result")
 
-    st.info(
-        "AI model will be connected here."
-    )
-else:
-    st.success("✅ Image quality check passed.")
-
-    st.subheader("Screening")
-
-    if st.button("🔍 Analyze Image"):
-
-        st.write("Analyzing image...")
-
-        st.success("Analysis completed.")
-
-        st.subheader("Screening Result")
-
-        st.info(
-            "AI model will be connected here."
-        )
+            st.info(
+                "AI model will be connected here."
+            )
