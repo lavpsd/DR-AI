@@ -1,5 +1,18 @@
 import streamlit as st
 from PIL import Image
+import tensorflow as tf
+import numpy as np
+
+# Load trained diabetic retinopathy model
+model = tf.keras.models.load_model("diabetic_retinopathy_model.keras")
+
+class_names = [
+    "Mild",
+    "Moderate",
+    "No_DR",
+    "Proliferate_DR",
+    "Severe"
+]
 
 # Page configuration
 st.set_page_config(
@@ -60,12 +73,30 @@ if uploaded_file is not None:
 
         if st.button("🔍 Analyze Image"):
 
-            st.write("Analyzing image...")
+           st.write("Analyzing image...")
 
-            st.success("Analysis completed.")
+# Prepare image for the model
+img = image.resize((224, 224))
+img_array = np.array(img)
 
-            st.subheader("Screening Result")
+# Make sure image has 3 color channels
+if img_array.shape[-1] == 4:
+    img_array = img_array[:, :, :3]
 
-            st.info(
-                "AI model will be connected here."
+img_array = img_array / 255.0
+img_array = np.expand_dims(img_array, axis=0)
+
+# Prediction
+prediction = model.predict(img_array)
+
+predicted_index = np.argmax(prediction[0])
+confidence = float(np.max(prediction[0])) * 100
+predicted_class = class_names[predicted_index]
+
+st.success("Analysis completed.")
+
+st.subheader("Screening Result")
+
+st.write("**Predicted condition:**", predicted_class)
+st.write("**Confidence:**", f"{confidence:.2f}%")
             )
