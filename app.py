@@ -200,19 +200,19 @@ if image_file is not None:
     with col1:
         st.image(image, use_container_width=True)
 
-    with col2:
-        width, height = image.size
+   with col2:
+    width, height = image.size
 
-        st.markdown("### 📋 Image Details")
+    st.markdown("### 📋 Image Details")
 
-        st.metric("Width", f"{width}px")
-        st.metric("Height", f"{height}px")
-        st.metric("Format", image.format)
+    st.metric("Width", f"{width}px")
+    st.metric("Height", f"{height}px")
+    st.metric("Format", image.format)
 
-        if width >= 224 and height >= 224:
-    st.success("✓ Image suitable for analysis")
-else:
-    st.warning("⚠️ Image resolution is low")
+    if width >= 224 and height >= 224:
+        st.success("✓ Image suitable for analysis")
+    else:
+        st.warning("⚠️ Image resolution is low")
 # -----------------------------
 # DISCLAIMER
 # -----------------------------
