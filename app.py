@@ -519,75 +519,40 @@ if image_file is not None:
             )
 
 
-        # =================================================
-        # RESULT SECTION
-        # =================================================
+      # =================================================
+# AI SCREENING RESULT
+# =================================================
 
-        st.markdown("---")
+st.markdown("---")
 
-        st.markdown(
-            '<div class="section-title">📊 AI Screening Result</div>',
-            unsafe_allow_html=True
-        )
+st.markdown("## 📊 AI Screening Result")
 
+result_col1, result_col2 = st.columns(2)
 
-        result_col1, result_col2 = st.columns(2)
+with result_col1:
 
+    st.markdown("### 🎯 Predicted Category")
 
-        # -------------------------------------------------
-        # PREDICTION
-        # -------------------------------------------------
-
-        with result_col1:
-
-            st.markdown(
-                f"""
-                <div class="result-box">
-
-                    <div class="result-label">
-                        🎯 Predicted Category
-                    </div>
-
-                    <div class="result-value">
-                        {predicted_class}
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.success(
+        f"## {predicted_class}"
+    )
 
 
-        # -------------------------------------------------
-        # CONFIDENCE
-        # -------------------------------------------------
+with result_col2:
 
-        with result_col2:
+    st.markdown("### 🤖 Model Confidence")
 
-            st.markdown(
-                f"""
-                <div class="result-box">
-
-                    <div class="result-label">
-                        🤖 Model Confidence
-                    </div>
-
-                    <div class="result-value">
-                        {confidence:.2f}%
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    st.metric(
+        "Confidence",
+        f"{confidence:.2f}%"
+    )
 
 
-        st.caption(
-            "The confidence value represents the model's predicted "
-            "probability for the selected category. It does not "
-            "guarantee prediction accuracy."
-        )
-
+st.caption(
+    "The confidence value represents the model's predicted "
+    "probability for the selected category. It does not "
+    "guarantee prediction accuracy."
+)
 
         # =================================================
         # PROBABILITY DISTRIBUTION
