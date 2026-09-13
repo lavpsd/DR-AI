@@ -181,6 +181,39 @@ with input_col2:
 
 
 # -----------------------------
+# DISPLAY SELECTED IMAGE
+# -----------------------------
+
+image_file = uploaded_image if uploaded_image else camera_image
+
+if image_file is not None:
+
+    from PIL import Image
+
+    image = Image.open(image_file)
+
+    st.markdown("---")
+    st.subheader("🖼️ Uploaded Retinal Image")
+
+    col1, col2 = st.columns([2,1])
+
+    with col1:
+        st.image(image, use_container_width=True)
+
+    with col2:
+        width, height = image.size
+
+        st.markdown("### 📋 Image Details")
+
+        st.metric("Width", f"{width}px")
+        st.metric("Height", f"{height}px")
+        st.metric("Format", image.format)
+
+        if width >= 300 and height >= 300:
+            st.success("Good quality")
+        else:
+            st.warning("Low quality")
+# -----------------------------
 # DISCLAIMER
 # -----------------------------
 st.warning(
