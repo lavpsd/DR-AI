@@ -209,10 +209,10 @@ if image_file is not None:
         st.metric("Height", f"{height}px")
         st.metric("Format", image.format)
 
-        if width >= 300 and height >= 300:
-            st.success("Good quality")
-        else:
-            st.warning("Low quality")
+       if width >= 224 and height >= 224:
+           st.success("✓ Image suitable for analysis")
+      else:
+          st.warning("⚠️ Image resolution is low")
 # -----------------------------
 # DISCLAIMER
 # -----------------------------
