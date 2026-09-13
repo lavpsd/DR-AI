@@ -158,9 +158,26 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.info(
-    "The image upload and camera capture functionality will appear here."
-)
+# -----------------------------
+# IMAGE INPUT
+# -----------------------------
+
+input_col1, input_col2 = st.columns(2)
+
+with input_col1:
+    st.markdown("### 📁 Upload Retinal Image")
+    uploaded_image = st.file_uploader(
+        "Choose an image",
+        type=["jpg", "jpeg", "png"],
+        label_visibility="collapsed"
+    )
+
+with input_col2:
+    st.markdown("### 📷 Camera Capture")
+    camera_image = st.camera_input(
+        "Capture retinal image",
+        label_visibility="collapsed"
+    )
 
 
 # -----------------------------
