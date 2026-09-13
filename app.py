@@ -9,9 +9,10 @@ import tensorflow as tf
 # =========================================================
 
 st.set_page_config(
-    page_title="DR-AI | Retinal Screening",
+    page_title="DR-AI | AI Retinal Screening",
     page_icon="👁️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 
@@ -22,66 +23,118 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-.main {
-    background-color: #f7f9fc;
+/* ---------- GENERAL ---------- */
+
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1400px;
 }
+
+
+/* ---------- HERO ---------- */
 
 .hero {
     padding: 55px 35px;
-    border-radius: 22px;
-    background: linear-gradient(135deg, #0f3443, #1b6b7a);
+    border-radius: 24px;
+    background: linear-gradient(135deg, #0b3442, #176b7c);
     color: white;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
 }
 
 .hero h1 {
-    font-size: 52px;
-    margin-bottom: 8px;
+    font-size: 58px;
+    margin: 0;
+    font-weight: 800;
 }
 
-.hero p {
-    font-size: 20px;
-    margin: 5px;
+.hero-main {
+    font-size: 23px;
+    font-weight: 600;
+    margin-top: 10px;
 }
 
-.hero-small {
-    color: #d8eef2;
-    font-size: 15px;
+.hero-sub {
+    font-size: 16px;
+    margin-top: 12px;
+    opacity: 0.9;
 }
+
+
+/* ---------- SECTION TITLES ---------- */
 
 .section-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-top: 25px;
-    margin-bottom: 15px;
+    font-size: 29px;
+    font-weight: 750;
+    margin-top: 32px;
+    margin-bottom: 18px;
 }
 
-.info-card {
-    background-color: white;
+
+/* ---------- FEATURE CARDS ---------- */
+
+.feature-card {
     padding: 25px;
-    border-radius: 16px;
-    border: 1px solid #e3e8ee;
-    min-height: 160px;
-}
-
-.info-card h3 {
-    color: #123b4a;
-}
-
-.result-card {
-    background-color: white;
-    padding: 30px;
     border-radius: 18px;
-    border: 1px solid #e3e8ee;
-    margin-top: 20px;
+    border: 1px solid rgba(128,128,128,0.25);
+    min-height: 175px;
+    background: rgba(128,128,128,0.06);
 }
+
+.feature-card h3 {
+    margin-top: 0;
+    font-size: 21px;
+}
+
+
+/* ---------- RESULT CARD ---------- */
+
+.result-box {
+    padding: 25px;
+    border-radius: 18px;
+    border: 2px solid rgba(23,107,124,0.35);
+    background: rgba(23,107,124,0.08);
+    margin-top: 10px;
+}
+
+.result-label {
+    font-size: 15px;
+    opacity: 0.75;
+    margin-bottom: 5px;
+}
+
+.result-value {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+
+/* ---------- CLASS CARDS ---------- */
+
+.class-card {
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(128,128,128,0.25);
+    min-height: 120px;
+    background: rgba(128,128,128,0.05);
+}
+
+.class-card h4 {
+    margin-top: 0;
+    font-size: 19px;
+}
+
+
+/* ---------- FOOTER ---------- */
 
 .footer {
     text-align: center;
-    color: #777;
-    margin-top: 45px;
-    padding: 20px;
+    opacity: 0.7;
+    margin-top: 50px;
+    padding: 25px;
+    border-top: 1px solid rgba(128,128,128,0.25);
 }
 
 </style>
@@ -89,11 +142,12 @@ st.markdown("""
 
 
 # =========================================================
-# LOAD AI MODEL
+# LOAD MODEL
 # =========================================================
 
 @st.cache_resource
 def load_model():
+
     return tf.keras.models.load_model(
         "diabetic_retinopathy_model.keras"
     )
@@ -104,6 +158,7 @@ model = load_model()
 
 # =========================================================
 # CLASS NAMES
+# IMPORTANT: KEEP THIS ORDER
 # =========================================================
 
 class_names = [
@@ -122,13 +177,15 @@ class_names = [
 st.markdown("""
 <div class="hero">
 
-<h1>👁️ DR-AI</h1>
+    <h1>👁️ DR-AI</h1>
 
-<p><b>AI-Powered Diabetic Retinopathy Screening</b></p>
+    <div class="hero-main">
+        AI-Powered Diabetic Retinopathy Screening
+    </div>
 
-<div class="hero-small">
-Analyze retinal images using a deep learning image classification model.
-</div>
+    <div class="hero-sub">
+        An educational deep-learning prototype for retinal image classification
+    </div>
 
 </div>
 """, unsafe_allow_html=True)
@@ -144,11 +201,11 @@ st.markdown(
 )
 
 st.write("""
-DR-AI is an AI-based prototype designed to analyze retinal images
-and classify them into five diabetic retinopathy categories.
+**DR-AI** is an AI-based prototype that analyzes retinal images
+and classifies them into five diabetic retinopathy categories.
 
-The system uses transfer learning with a MobileNetV2-based
-deep learning model.
+The system uses **transfer learning** with a MobileNetV2-based
+deep learning model trained on retinal image data.
 """)
 
 
@@ -156,50 +213,51 @@ deep learning model.
 # FEATURE CARDS
 # =========================================================
 
-col1, col2, col3 = st.columns(3)
+feature1, feature2, feature3 = st.columns(3)
 
 
-with col1:
+with feature1:
 
     st.markdown("""
-    <div class="info-card">
+    <div class="feature-card">
 
-    <h3>📷 Image Analysis</h3>
+    <h3>📷 Image Input</h3>
 
     <p>
-    Upload or capture a retinal image for AI-based analysis.
+    Upload a retinal image from your device or capture an image
+    using a supported camera.
     </p>
 
     </div>
     """, unsafe_allow_html=True)
 
 
-with col2:
+with feature2:
 
     st.markdown("""
-    <div class="info-card">
+    <div class="feature-card">
 
-    <h3>🤖 AI Classification</h3>
+    <h3>🤖 AI Analysis</h3>
 
     <p>
-    A MobileNetV2-based model analyzes visual patterns
-    in the retinal image.
+    The trained MobileNetV2-based model processes the image
+    and identifies the most probable category.
     </p>
 
     </div>
     """, unsafe_allow_html=True)
 
 
-with col3:
+with feature3:
 
     st.markdown("""
-    <div class="info-card">
+    <div class="feature-card">
 
     <h3>📊 Screening Result</h3>
 
     <p>
-    The system displays the predicted category
-    and model confidence.
+    The application displays the predicted category,
+    confidence and probability distribution.
     </p>
 
     </div>
@@ -207,7 +265,7 @@ with col3:
 
 
 # =========================================================
-# IMAGE INPUT
+# START SCREENING
 # =========================================================
 
 st.markdown(
@@ -219,16 +277,24 @@ st.markdown(
 input_col1, input_col2 = st.columns(2)
 
 
+# ---------------------------------------------------------
+# UPLOAD
+# ---------------------------------------------------------
+
 with input_col1:
 
     st.markdown("### 📁 Upload Retinal Image")
 
     uploaded_image = st.file_uploader(
-        "Choose an image",
+        "Choose a retinal image",
         type=["jpg", "jpeg", "png"],
         label_visibility="collapsed"
     )
 
+
+# ---------------------------------------------------------
+# CAMERA
+# ---------------------------------------------------------
 
 with input_col2:
 
@@ -241,28 +307,36 @@ with input_col2:
 
 
 # =========================================================
-# SELECT IMAGE
+# CHOOSE IMAGE SOURCE
 # =========================================================
 
 image_file = uploaded_image
 
 if image_file is None:
+
     image_file = camera_image
 
 
 # =========================================================
-# IMAGE DISPLAY
+# IMAGE PROCESSING
 # =========================================================
 
 if image_file is not None:
 
+    # Open original image
     image = Image.open(image_file)
 
+    # Save original information
     original_width, original_height = image.size
     original_format = image.format
 
-    # Convert image to RGB
+    # Convert to RGB
     image = image.convert("RGB")
+
+
+    # =====================================================
+    # IMAGE DISPLAY
+    # =====================================================
 
     st.markdown("---")
 
@@ -272,14 +346,14 @@ if image_file is not None:
     )
 
 
-    display_col1, display_col2 = st.columns([2, 1])
+    image_col, details_col = st.columns([2.2, 1])
 
 
     # -----------------------------------------------------
     # IMAGE
     # -----------------------------------------------------
 
-    with display_col1:
+    with image_col:
 
         st.image(
             image,
@@ -289,10 +363,10 @@ if image_file is not None:
 
 
     # -----------------------------------------------------
-    # IMAGE DETAILS
+    # DETAILS
     # -----------------------------------------------------
 
-    with display_col2:
+    with details_col:
 
         st.markdown("### 📋 Image Details")
 
@@ -312,13 +386,14 @@ if image_file is not None:
         )
 
 
-        # -------------------------------------------------
+        # =================================================
         # QUALITY CHECK
-        # -------------------------------------------------
+        # =================================================
 
         st.markdown("### 🔎 Input Quality Check")
 
 
+        # Resolution
         if original_width >= 224 and original_height >= 224:
 
             st.success("✅ Resolution check passed")
@@ -326,10 +401,11 @@ if image_file is not None:
         else:
 
             st.warning(
-                "⚠️ Resolution is below the model input size"
+                "⚠️ Resolution is below model input size"
             )
 
 
+        # Format
         if original_format in ["JPEG", "PNG"]:
 
             st.success("✅ Supported image format")
@@ -341,6 +417,7 @@ if image_file is not None:
             )
 
 
+        # Overall preprocessing status
         if original_width >= 224 and original_height >= 224:
 
             st.info(
@@ -350,7 +427,7 @@ if image_file is not None:
         else:
 
             st.warning(
-                "🟡 Image may require higher resolution"
+                "🟡 Consider using a higher-resolution image"
             )
 
 
@@ -360,7 +437,6 @@ if image_file is not None:
 
     st.markdown("---")
 
-
     analyze = st.button(
         "🔍 Analyze Image",
         type="primary",
@@ -369,47 +445,65 @@ if image_file is not None:
 
 
     # =====================================================
-    # AI PREDICTION
+    # AI ANALYSIS
     # =====================================================
 
     if analyze:
 
         with st.spinner(
-            "🤖 AI is analyzing the retinal image..."
+            "🤖 DR-AI is analyzing the retinal image..."
         ):
 
-            # Resize image
+            # ---------------------------------------------
+            # RESIZE
+            # ---------------------------------------------
+
             processed_image = image.resize(
                 (224, 224)
             )
 
 
-            # Convert image to NumPy array
+            # ---------------------------------------------
+            # NUMPY ARRAY
+            # ---------------------------------------------
+
             img_array = np.array(
                 processed_image,
                 dtype=np.float32
             )
 
 
-            # Normalize pixel values
+            # ---------------------------------------------
+            # NORMALIZATION
+            # ---------------------------------------------
+
             img_array = img_array / 255.0
 
 
-            # Add batch dimension
+            # ---------------------------------------------
+            # BATCH DIMENSION
+            # ---------------------------------------------
+
             img_array = np.expand_dims(
                 img_array,
                 axis=0
             )
 
 
-            # Model prediction
+            # ---------------------------------------------
+            # MODEL PREDICTION
+            # ---------------------------------------------
+
             predictions = model.predict(
                 img_array,
                 verbose=0
             )
 
 
-            # Find highest probability
+            # ---------------------------------------------
+            # FIND PREDICTED CLASS
+            # ---------------------------------------------
+
             predicted_index = int(
                 np.argmax(predictions[0])
             )
@@ -420,14 +514,20 @@ if image_file is not None:
             ]
 
 
+            # ---------------------------------------------
+            # CONFIDENCE
+            # ---------------------------------------------
+
             confidence = float(
                 predictions[0][predicted_index] * 100
             )
 
 
         # =================================================
-        # RESULT
+        # RESULT SECTION
         # =================================================
+
+        st.markdown("---")
 
         st.markdown(
             '<div class="section-title">📊 AI Screening Result</div>',
@@ -435,42 +535,66 @@ if image_file is not None:
         )
 
 
-        st.markdown(
-            '<div class="result-card">',
-            unsafe_allow_html=True
-        )
-
-
         result_col1, result_col2 = st.columns(2)
 
 
+        # -------------------------------------------------
+        # PREDICTION
+        # -------------------------------------------------
+
         with result_col1:
 
-            st.markdown("### Predicted Category")
+            st.markdown(
+                f"""
+                <div class="result-box">
 
-            st.subheader(
-                predicted_class
+                    <div class="result-label">
+                        🎯 Predicted Category
+                    </div>
+
+                    <div class="result-value">
+                        {predicted_class}
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
+
+        # -------------------------------------------------
+        # CONFIDENCE
+        # -------------------------------------------------
 
         with result_col2:
 
-            st.markdown("### Model Confidence")
+            st.markdown(
+                f"""
+                <div class="result-box">
 
-            st.metric(
-                "Confidence",
-                f"{confidence:.2f}%"
+                    <div class="result-label">
+                        🤖 Model Confidence
+                    </div>
+
+                    <div class="result-value">
+                        {confidence:.2f}%
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
 
-        st.markdown(
-            '</div>',
-            unsafe_allow_html=True
+        st.caption(
+            "The confidence value represents the model's predicted "
+            "probability for the selected category. It does not "
+            "guarantee prediction accuracy."
         )
 
 
         # =================================================
-        # PROBABILITIES
+        # PROBABILITY DISTRIBUTION
         # =================================================
 
         st.markdown(
@@ -507,65 +631,168 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.write("""
-**1. Image Input**
 
-A retinal image is uploaded or captured.
+how_col1, how_col2, how_col3, how_col4 = st.columns(4)
 
-**2. Preprocessing**
 
-The image is converted to RGB, resized to
-224 × 224 pixels and normalized.
+with how_col1:
 
-**3. Feature Extraction**
+    st.markdown("""
+    <div class="feature-card">
 
-MobileNetV2 extracts useful visual features
-from the retinal image.
+    <h3>1️⃣ Input</h3>
 
-**4. Classification**
+    <p>
+    A retinal image is uploaded or captured.
+    </p>
 
-A trained neural-network classifier uses those
-features to predict one of five categories.
+    </div>
+    """, unsafe_allow_html=True)
 
-**5. Result**
 
-DR-AI displays the predicted category and
-the model's confidence.
-""")
+with how_col2:
+
+    st.markdown("""
+    <div class="feature-card">
+
+    <h3>2️⃣ Preprocessing</h3>
+
+    <p>
+    The image is converted to RGB,
+    resized to 224 × 224 and normalized.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with how_col3:
+
+    st.markdown("""
+    <div class="feature-card">
+
+    <h3>3️⃣ AI Model</h3>
+
+    <p>
+    MobileNetV2 extracts visual features
+    and performs classification.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with how_col4:
+
+    st.markdown("""
+    <div class="feature-card">
+
+    <h3>4️⃣ Result</h3>
+
+    <p>
+    The system displays the predicted category
+    and probability distribution.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # =========================================================
 # FIVE POSSIBLE CLASSES
 # =========================================================
 
+st.markdown("---")
+
 st.markdown(
-    '<div class="section-title">🧠 Possible Classes</div>',
+    '<div class="section-title">🧠 Five Possible Classes</div>',
     unsafe_allow_html=True
 )
 
 
-class_col1, class_col2 = st.columns(2)
+class1, class2, class3, class4, class5 = st.columns(5)
 
 
-with class_col1:
+with class1:
 
-    st.write("• **No DR**")
+    st.markdown("""
+    <div class="class-card">
 
-    st.write("• **Mild**")
+    <h4>🟢 No DR</h4>
 
-    st.write("• **Moderate**")
+    <p>
+    No diabetic retinopathy category.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
 
 
-with class_col2:
+with class2:
 
-    st.write("• **Severe**")
+    st.markdown("""
+    <div class="class-card">
 
-    st.write("• **Proliferative DR**")
+    <h4>🟡 Mild</h4>
+
+    <p>
+    Mild retinopathy category.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with class3:
+
+    st.markdown("""
+    <div class="class-card">
+
+    <h4>🟠 Moderate</h4>
+
+    <p>
+    Moderate retinopathy category.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with class4:
+
+    st.markdown("""
+    <div class="class-card">
+
+    <h4>🔴 Severe</h4>
+
+    <p>
+    Severe retinopathy category.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+with class5:
+
+    st.markdown("""
+    <div class="class-card">
+
+    <h4>🔴 Proliferative DR</h4>
+
+    <p>
+    Proliferative retinopathy category.
+    </p>
+
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # =========================================================
 # MODEL INFORMATION
 # =========================================================
+
+st.markdown("---")
 
 st.markdown(
     '<div class="section-title">🤖 Model Information</div>',
@@ -573,54 +800,88 @@ st.markdown(
 )
 
 
-model_col1, model_col2, model_col3 = st.columns(3)
+model_col1, model_col2, model_col3, model_col4 = st.columns(4)
 
 
 with model_col1:
 
-    st.info("""
-    **Architecture**
-
-    MobileNetV2
-    """)
+    st.metric(
+        "Architecture",
+        "MobileNetV2"
+    )
 
 
 with model_col2:
 
-    st.info("""
-    **Technique**
-
-    Transfer Learning
-    """)
+    st.metric(
+        "Input Size",
+        "224 × 224"
+    )
 
 
 with model_col3:
 
-    st.info("""
-    **Input Size**
+    st.metric(
+        "Classes",
+        "5"
+    )
 
-    224 × 224 pixels
-    """)
+
+with model_col4:
+
+    st.metric(
+        "Technique",
+        "Transfer Learning"
+    )
+
+
+st.write("""
+The model uses a **pre-trained MobileNetV2 network** as the
+feature extraction backbone and a classification head trained
+for the five retinal categories used in this prototype.
+""")
 
 
 # =========================================================
 # LIMITATIONS
 # =========================================================
 
+st.markdown("---")
+
 st.markdown(
     '<div class="section-title">⚠️ Limitations</div>',
     unsafe_allow_html=True
 )
 
-st.write("""
-- Model performance depends on image quality and similarity
-  to the training data.
-- The model can produce incorrect predictions.
-- Confidence scores do not guarantee prediction accuracy.
-- Images from different cameras or datasets may produce
-  different results.
-- The model has not been clinically validated.
-""")
+
+lim_col1, lim_col2 = st.columns(2)
+
+
+with lim_col1:
+
+    st.write("""
+    **Technical limitations**
+
+    - Performance depends on image quality.
+    - Images that differ significantly from the training data
+      may produce less reliable predictions.
+    - Different cameras and image-processing methods can
+      affect model performance.
+    - The model can make incorrect predictions.
+    """)
+
+
+with lim_col2:
+
+    st.write("""
+    **Important interpretation**
+
+    - Confidence does not mean medical certainty.
+    - A high-confidence prediction can still be incorrect.
+    - This prototype has not been clinically validated.
+    - Results should not be used as a substitute for
+      professional eye examination.
+    """)
 
 
 # =========================================================
@@ -634,8 +895,8 @@ DR-AI is an educational and preliminary screening prototype.
 It is **not a medical diagnostic device** and should not be
 used to make medical decisions.
 
-Please consult a qualified eye-care professional for
-proper evaluation.
+For medical concerns or suspected diabetic retinopathy,
+consult a qualified eye-care professional.
 """)
 
 
@@ -646,11 +907,17 @@ proper evaluation.
 st.markdown("""
 <div class="footer">
 
-<b>DR-AI</b> • AI-Based Retinal Image Screening Prototype
+<h3>👁️ DR-AI</h3>
+
+AI-Based Retinal Image Screening Prototype
+
+<br>
+
+Built for educational and research purposes
 
 <br><br>
 
-Built for educational and research purposes
+© 2026 DR-AI
 
 </div>
 """, unsafe_allow_html=True)
