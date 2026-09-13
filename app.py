@@ -53,7 +53,6 @@ st.markdown("""
 .section-title {
     font-size: 28px;
     font-weight: 700;
-    color: #123b4a;
     margin-top: 25px;
     margin-bottom: 15px;
 }
@@ -95,7 +94,9 @@ st.markdown("""
 
 @st.cache_resource
 def load_model():
-    return tf.keras.models.load_model("diabetic_retinopathy_model.keras")
+    return tf.keras.models.load_model(
+        "diabetic_retinopathy_model.keras"
+    )
 
 
 model = load_model()
@@ -134,7 +135,7 @@ Analyze retinal images using a deep learning image classification model.
 
 
 # =========================================================
-# ABOUT
+# ABOUT DR-AI
 # =========================================================
 
 st.markdown(
@@ -146,8 +147,8 @@ st.write("""
 DR-AI is an AI-based prototype designed to analyze retinal images
 and classify them into five diabetic retinopathy categories.
 
-The system uses transfer learning with a MobileNetV2-based deep
-learning model.
+The system uses transfer learning with a MobileNetV2-based
+deep learning model.
 """)
 
 
@@ -157,34 +158,50 @@ learning model.
 
 col1, col2, col3 = st.columns(3)
 
+
 with col1:
+
     st.markdown("""
     <div class="info-card">
+
     <h3>📷 Image Analysis</h3>
+
     <p>
-    Upload or capture a retinal image for analysis.
+    Upload or capture a retinal image for AI-based analysis.
     </p>
+
     </div>
     """, unsafe_allow_html=True)
+
 
 with col2:
+
     st.markdown("""
     <div class="info-card">
+
     <h3>🤖 AI Classification</h3>
+
     <p>
-    The MobileNetV2-based model analyzes visual patterns
+    A MobileNetV2-based model analyzes visual patterns
     in the retinal image.
     </p>
+
     </div>
     """, unsafe_allow_html=True)
 
+
 with col3:
+
     st.markdown("""
     <div class="info-card">
+
     <h3>📊 Screening Result</h3>
+
     <p>
-    The system provides a predicted category and model confidence.
+    The system displays the predicted category
+    and model confidence.
     </p>
+
     </div>
     """, unsafe_allow_html=True)
 
@@ -198,7 +215,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 input_col1, input_col2 = st.columns(2)
+
 
 with input_col1:
 
@@ -232,12 +251,18 @@ if image_file is None:
 
 
 # =========================================================
-# IMAGE DISPLAY + QUALITY CHECK
+# IMAGE DISPLAY
 # =========================================================
 
 if image_file is not None:
 
-    image = Image.open(image_file).convert("RGB")
+    image = Image.open(image_file)
+
+    original_width, original_height = image.size
+    original_format = image.format
+
+    # Convert image to RGB
+    image = image.convert("RGB")
 
     st.markdown("---")
 
@@ -246,7 +271,13 @@ if image_file is not None:
         unsafe_allow_html=True
     )
 
+
     display_col1, display_col2 = st.columns([2, 1])
+
+
+    # -----------------------------------------------------
+    # IMAGE
+    # -----------------------------------------------------
 
     with display_col1:
 
@@ -257,61 +288,78 @@ if image_file is not None:
         )
 
 
+    # -----------------------------------------------------
+    # IMAGE DETAILS
+    # -----------------------------------------------------
+
     with display_col2:
 
         st.markdown("### 📋 Image Details")
 
-        width, height = image.size
-
         st.metric(
             "Width",
-            f"{width}px"
+            f"{original_width}px"
         )
 
         st.metric(
             "Height",
-            f"{height}px"
+            f"{original_height}px"
         )
 
         st.metric(
             "Format",
-            image.format if image.format else "Image"
+            original_format if original_format else "Image"
         )
+
+
+        # -------------------------------------------------
+        # QUALITY CHECK
+        # -------------------------------------------------
 
         st.markdown("### 🔎 Input Quality Check")
 
-if width >= 224 and height >= 224:
 
-    st.success("✅ Resolution check passed")
+        if original_width >= 224 and original_height >= 224:
 
-else:
+            st.success("✅ Resolution check passed")
 
-    st.warning("⚠️ Resolution is below the model input size")
+        else:
 
-
-if image.mode == "RGB":
-
-    st.success("✅ RGB image format detected")
-
-else:
-
-    st.warning("⚠️ Image will be converted to RGB")
+            st.warning(
+                "⚠️ Resolution is below the model input size"
+            )
 
 
-if width >= 224 and height >= 224 and image.mode == "RGB":
+        if original_format in ["JPEG", "PNG"]:
 
-    st.info("🟢 Image is ready for AI analysis")
+            st.success("✅ Supported image format")
 
-else:
+        else:
 
-    st.warning("🟡 Image may require preprocessing")
+            st.info(
+                "ℹ️ Image will be converted to RGB"
+            )
 
 
-# =========================================================
-# ANALYZE BUTTON
-# =========================================================
+        if original_width >= 224 and original_height >= 224:
+
+            st.info(
+                "🟢 Image is ready for AI preprocessing"
+            )
+
+        else:
+
+            st.warning(
+                "🟡 Image may require higher resolution"
+            )
+
+
+    # =====================================================
+    # ANALYZE BUTTON
+    # =====================================================
 
     st.markdown("---")
+
 
     analyze = st.button(
         "🔍 Analyze Image",
@@ -326,19 +374,33 @@ else:
 
     if analyze:
 
-        with st.spinner("AI is analyzing the retinal image..."):
+        with st.spinner(
+            "🤖 AI is analyzing the retinal image..."
+        ):
 
-            # Resize image to model input size
-            processed_image = image.resize((224, 224))
+            # Resize image
+            processed_image = image.resize(
+                (224, 224)
+            )
+
 
             # Convert image to NumPy array
-            img_array = np.array(processed_image)
+            img_array = np.array(
+                processed_image,
+                dtype=np.float32
+            )
+
 
             # Normalize pixel values
             img_array = img_array / 255.0
 
+
             # Add batch dimension
-            img_array = np.expand_dims(img_array, axis=0)
+            img_array = np.expand_dims(
+                img_array,
+                axis=0
+            )
+
 
             # Model prediction
             predictions = model.predict(
@@ -346,11 +408,17 @@ else:
                 verbose=0
             )
 
+
+            # Find highest probability
             predicted_index = int(
                 np.argmax(predictions[0])
             )
 
-            predicted_class = class_names[predicted_index]
+
+            predicted_class = class_names[
+                predicted_index
+            ]
+
 
             confidence = float(
                 predictions[0][predicted_index] * 100
@@ -358,7 +426,7 @@ else:
 
 
         # =================================================
-        # RESULT CARD
+        # RESULT
         # =================================================
 
         st.markdown(
@@ -366,12 +434,15 @@ else:
             unsafe_allow_html=True
         )
 
+
         st.markdown(
             '<div class="result-card">',
             unsafe_allow_html=True
         )
 
+
         result_col1, result_col2 = st.columns(2)
+
 
         with result_col1:
 
@@ -399,10 +470,13 @@ else:
 
 
         # =================================================
-        # ALL CLASS PROBABILITIES
+        # PROBABILITIES
         # =================================================
 
-        st.markdown("### 📈 Prediction Probabilities")
+        st.markdown(
+            "### 📈 Prediction Probabilities"
+        )
+
 
         for i, class_name in enumerate(class_names):
 
@@ -410,9 +484,12 @@ else:
                 predictions[0][i] * 100
             )
 
+
             st.write(
-                f"**{class_name}** — {probability:.2f}%"
+                f"**{class_name}** — "
+                f"{probability:.2f}%"
             )
+
 
             st.progress(
                 min(probability / 100, 1.0)
@@ -431,19 +508,29 @@ st.markdown(
 )
 
 st.write("""
-**1. Image Input** → A retinal image is uploaded or captured.
+**1. Image Input**
 
-**2. Preprocessing** → The image is converted to RGB,
-resized to 224 × 224 pixels and normalized.
+A retinal image is uploaded or captured.
 
-**3. Feature Extraction** → MobileNetV2 extracts useful
-visual features from the retinal image.
+**2. Preprocessing**
 
-**4. Classification** → A trained neural-network classifier
-uses those features to predict one of five categories.
+The image is converted to RGB, resized to
+224 × 224 pixels and normalized.
 
-**5. Result** → DR-AI displays the predicted category
-and the model's confidence.
+**3. Feature Extraction**
+
+MobileNetV2 extracts useful visual features
+from the retinal image.
+
+**4. Classification**
+
+A trained neural-network classifier uses those
+features to predict one of five categories.
+
+**5. Result**
+
+DR-AI displays the predicted category and
+the model's confidence.
 """)
 
 
@@ -456,18 +543,23 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 class_col1, class_col2 = st.columns(2)
+
 
 with class_col1:
 
     st.write("• **No DR**")
+
     st.write("• **Mild**")
+
     st.write("• **Moderate**")
 
 
 with class_col2:
 
     st.write("• **Severe**")
+
     st.write("• **Proliferative DR**")
 
 
@@ -480,7 +572,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 model_col1, model_col2, model_col3 = st.columns(3)
+
 
 with model_col1:
 
@@ -519,13 +613,13 @@ st.markdown(
 )
 
 st.write("""
-- Model performance depends on image quality and similarity to
-  the training data.
-- The model may produce incorrect predictions.
+- Model performance depends on image quality and similarity
+  to the training data.
+- The model can produce incorrect predictions.
 - Confidence scores do not guarantee prediction accuracy.
-- Images from different cameras or datasets may produce different
-  results.
-- This prototype has not been validated for clinical diagnosis.
+- Images from different cameras or datasets may produce
+  different results.
+- The model has not been clinically validated.
 """)
 
 
@@ -537,9 +631,11 @@ st.warning("""
 ⚠️ **Medical Disclaimer**
 
 DR-AI is an educational and preliminary screening prototype.
-It is **not a medical diagnostic device** and should not be used
-to make medical decisions. Please consult a qualified eye-care
-professional for proper evaluation.
+It is **not a medical diagnostic device** and should not be
+used to make medical decisions.
+
+Please consult a qualified eye-care professional for
+proper evaluation.
 """)
 
 
@@ -550,7 +646,10 @@ professional for proper evaluation.
 st.markdown("""
 <div class="footer">
 
-<b>DR-AI</b> • AI-Based Retinal Image Screening Prototype<br>
+<b>DR-AI</b> • AI-Based Retinal Image Screening Prototype
+
+<br><br>
+
 Built for educational and research purposes
 
 </div>
