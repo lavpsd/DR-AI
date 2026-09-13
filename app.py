@@ -278,13 +278,33 @@ if image_file is not None:
             image.format if image.format else "Image"
         )
 
-        if width >= 224 and height >= 224:
+        st.markdown("### 🔎 Input Quality Check")
 
-            st.success("✓ Image suitable for model input")
+if width >= 224 and height >= 224:
 
-        else:
+    st.success("✅ Resolution check passed")
 
-            st.warning("⚠️ Image resolution is low")
+else:
+
+    st.warning("⚠️ Resolution is below the model input size")
+
+
+if image.mode == "RGB":
+
+    st.success("✅ RGB image format detected")
+
+else:
+
+    st.warning("⚠️ Image will be converted to RGB")
+
+
+if width >= 224 and height >= 224 and image.mode == "RGB":
+
+    st.info("🟢 Image is ready for AI analysis")
+
+else:
+
+    st.warning("🟡 Image may require preprocessing")
 
 
 # =========================================================
