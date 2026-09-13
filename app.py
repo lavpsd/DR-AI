@@ -174,21 +174,17 @@ class_names = [
 # HERO SECTION
 # =========================================================
 
-st.markdown("""
-<div class="hero">
+st.title("👁️ DR-AI")
 
-    <h1>👁️ DR-AI</h1>
+st.subheader(
+    "AI-Powered Diabetic Retinopathy Screening"
+)
 
-    <div class="hero-main">
-        AI-Powered Diabetic Retinopathy Screening
-    </div>
+st.write(
+    "An educational deep-learning prototype for retinal image classification."
+)
 
-    <div class="hero-sub">
-        An educational deep-learning prototype for retinal image classification
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown("---")
 
 
 # =========================================================
