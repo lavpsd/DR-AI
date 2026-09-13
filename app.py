@@ -195,12 +195,12 @@ if image_file is not None:
     st.markdown("---")
     st.subheader("🖼️ Uploaded Retinal Image")
 
-    col1, col2 = st.columns([2,1])
+   col1, col2 = st.columns([2, 1])
 
-    with col1:
-        st.image(image, use_container_width=True)
+with col1:
+    st.image(image, use_container_width=True)
 
-   with col2:
+with col2:
     width, height = image.size
 
     st.markdown("### 📋 Image Details")
